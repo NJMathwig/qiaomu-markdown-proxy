@@ -2,15 +2,15 @@
 name: markdown-proxy
 description: |
   Fetch any URL as clean Markdown via proxy services (r.jina.ai / defuddle.md) or built-in scripts.
-  Works with login-required pages like X/Twitter, WeChat 公众号, Instagram, etc.
+  Works with login-required pages like X/Twitter, WeChat 公众号, Feishu/Lark docs, Instagram, etc.
   Use this BEFORE agent-fetch, defuddle CLI, or WebFetch when the URL might need authentication or when you want the cleanest markdown output.
   Triggers on any URL the user shares, "fetch this", "read this link", "get content from".
-  Especially effective for X/Twitter posts, WeChat 公众号 articles, and login-walled pages.
+  Supports X/Twitter posts, WeChat 公众号 articles, Feishu/Lark documents, and login-walled pages.
 ---
 
-# Markdown Proxy - URL to Markdown via Proxy Services
+# Markdown Proxy - URL to Markdown
 
-Fetch any URL as clean Markdown using web proxy services or built-in scripts. Works with login-required pages that local tools cannot access.
+将任意 URL 转为干净的 Markdown。支持需要登录的页面和专有平台。
 
 ## URL 路由规则（先判断再执行）
 
@@ -19,8 +19,9 @@ Fetch any URL as clean Markdown using web proxy services or built-in scripts. Wo
 | URL 特征 | 路由到 | 原因 |
 |----------|--------|------|
 | `mp.weixin.qq.com` | 内置 `scripts/fetch_weixin.py` | 公众号有反爬，需 Playwright 抓取 |
+| `feishu.cn` / `larksuite.com`（文档/知识库） | 内置 `scripts/fetch_feishu.py` | 需要飞书 API 认证 |
 | `youtube.com` / `youtu.be` | `yt-search-download` skill | YouTube 有专用工具链 |
-| 其他所有 URL | 本 skill 的代理服务流程（见下方） |  |
+| 其他所有 URL | 代理服务级联（见下方） |  |
 
 ## 代理服务优先级
 
@@ -40,6 +41,10 @@ if URL contains "mp.weixin.qq.com":
     → Step A: 公众号抓取
     → 结束
 
+if URL contains "feishu.cn/docx/" or "feishu.cn/wiki/" or "feishu.cn/docs/" or "larksuite.com/docx/":
+    → Step B: 飞书文档抓取
+    → 结束
+
 if URL contains "youtube.com" or "youtu.be":
     → 调用 yt-search-download skill
     → 结束
@@ -50,19 +55,24 @@ else:
 
 ### Step A: 公众号文章抓取（内置）
 
-使用本 skill 内置的 Playwright 脚本：
-
 ```bash
-python3 /path/to/this/skill/scripts/fetch_weixin.py "WEIXIN_URL"
+python3 ~/.claude/skills/markdown-proxy/scripts/fetch_weixin.py "WEIXIN_URL"
 ```
 
-脚本路径（绝对）：`~/.claude/skills/markdown-proxy/scripts/fetch_weixin.py`
+依赖：`playwright`、`beautifulsoup4`、`lxml`
+输出：YAML frontmatter（title, author, date, url）+ Markdown 正文
+失败时回退到 Step 1-2 代理服务。
 
-依赖：`playwright`（已安装在 conda 环境）、`beautifulsoup4`、`lxml`
+### Step B: 飞书文档抓取（内置）
 
-输出格式：YAML frontmatter（title, author, date, url）+ Markdown 正文
+```bash
+python3 ~/.claude/skills/markdown-proxy/scripts/fetch_feishu.py "FEISHU_URL"
+```
 
-如果脚本执行失败，尝试用代理服务（Step 1-2）作为备选。
+依赖：`requests`（标准库级别），环境变量 `FEISHU_APP_ID` + `FEISHU_APP_SECRET`
+支持：docx 文档、doc 文档、wiki 知识库页面（自动解析实际文档 ID）
+输出：YAML frontmatter（title, document_id, url）+ Markdown 正文
+支持 `--json` 参数输出 JSON 格式。
 
 ### Step 1: 优先用 r.jina.ai
 
@@ -95,26 +105,35 @@ defuddle parse "{original_url}" -m -j
 
 ## Examples
 
-### X/Twitter 帖子或长文
+### X/Twitter 帖子
 ```bash
 curl -sL "https://r.jina.ai/https://x.com/username/status/1234567890"
 ```
 
-### 普通网页文章
+### 普通网页
 ```bash
 curl -sL "https://r.jina.ai/https://example.com/article"
 ```
 
-### 公众号文章（内置脚本）
+### 公众号文章
 ```bash
 python3 ~/.claude/skills/markdown-proxy/scripts/fetch_weixin.py "https://mp.weixin.qq.com/s/abc123"
+```
+
+### 飞书文档
+```bash
+python3 ~/.claude/skills/markdown-proxy/scripts/fetch_feishu.py "https://xxx.feishu.cn/docx/xxxxxxxx"
+```
+
+### 飞书知识库
+```bash
+python3 ~/.claude/skills/markdown-proxy/scripts/fetch_feishu.py "https://xxx.feishu.cn/wiki/xxxxxxxx"
 ```
 
 ## Notes
 
 - r.jina.ai 和 defuddle.md 均免费、无需 API key
-- r.jina.ai 返回 Title/URL/Published Time 头信息 + Markdown 正文
-- defuddle.md 返回 YAML frontmatter（title, author, site, word_count）+ Markdown 正文
+- 公众号文章使用内置 Playwright 脚本（需 `playwright install chromium`）
+- 飞书文档使用内置 API 脚本（需环境变量 `FEISHU_APP_ID` + `FEISHU_APP_SECRET`）
+- 飞书脚本自动将 blocks 转为 Markdown（标题、列表、代码块、引用、待办等）
 - 对于超长内容，可用 `| head -n 200` 先预览
-- 公众号文章使用内置 fetch_weixin.py 脚本（Playwright + BeautifulSoup）
-- fetch_weixin.py 支持 `--json` 参数输出 JSON 格式
