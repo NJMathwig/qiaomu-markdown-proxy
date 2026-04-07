@@ -13,29 +13,34 @@
 
 ### Features
 
-Send any URL to Claude, and it automatically fetches the full content as Markdown. Four special platforms have dedicated extraction:
+Send any URL to Claude, and it automatically fetches the full content as Markdown. Five content types have dedicated extraction:
 
 | URL Type | Method | Why |
 |----------|--------|-----|
 | WeChat Articles (`mp.weixin.qq.com`) | Built-in Playwright script | Anti-scraping protection requires headless browser |
 | Feishu/Lark Docs (`feishu.cn`, `larksuite.com`) | Built-in Feishu API script | Requires API authentication, auto-converts to Markdown |
 | YouTube | Dedicated YouTube skill | Video content has its own toolchain |
-| All other URLs | Proxy cascade: r.jina.ai → defuddle.md → agent-fetch | Free, no API key needed |
+| PDF (remote or local) | Built-in PDF extraction (`extract_pdf.sh`) | Three-method cascade: marker-pdf → pdftotext → pypdf |
+| All other URLs | Proxy cascade via `fetch.sh`: r.jina.ai → defuddle.md → agent-fetch | Free, no API key, content validation built-in |
 
 ### Prerequisites
 
 - [ ] [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed
 - [ ] **curl** (built-in on macOS/Linux)
-- [ ] (WeChat scraping) Python 3.8+ with playwright
+- [ ] (Optional - WeChat scraping) Python 3.8+ with playwright
   ```bash
   pip install playwright beautifulsoup4 lxml
   playwright install chromium
   ```
-- [ ] (Proxy fallback) [agent-fetch](https://github.com/teng-lin/agent-fetch) — local fallback when online proxies fail
+- [ ] (Optional - PDF extraction) One of:
+  - **marker-pdf** (best quality): `pip install marker-pdf`
+  - **pdftotext** (fast): `brew install poppler`
+  - **pypdf** (fallback): `pip install pypdf`
+- [ ] (Optional - Proxy fallback) [agent-fetch](https://github.com/teng-lin/agent-fetch)
   ```bash
   npx agent-fetch --help  # No pre-install needed, npx auto-downloads
   ```
-- [ ] (Feishu docs) Environment variables `FEISHU_APP_ID` and `FEISHU_APP_SECRET`
+- [ ] (Optional - Feishu docs) Environment variables `FEISHU_APP_ID` and `FEISHU_APP_SECRET`
   ```bash
   echo $FEISHU_APP_ID  # Verify configured
   ```
@@ -102,29 +107,34 @@ Built-in `fetch_feishu.py` script fetches documents via Feishu Open API and auto
 
 ### 功能
 
-给 Claude 发一个 URL，自动抓取完整内容并转为 Markdown。支持四种特殊平台的专用抓取：
+给 Claude 发一个 URL，自动抓取完整内容并转为 Markdown。支持五种内容类型的专用抓取：
 
 | URL 类型 | 抓取方式 | 原因 |
 |----------|---------|------|
 | 微信公众号 (`mp.weixin.qq.com`) | 内置 Playwright 脚本 | 公众号有反爬，需无头浏览器 |
 | 飞书文档 (`feishu.cn/docx/`, `/wiki/`, `/docs/`) | 内置飞书 API 脚本 | 需要 API 认证，自动转 Markdown |
 | YouTube | 专用 YouTube skill | 视频内容有专用工具链 |
-| 其他所有 URL | 代理级联：r.jina.ai → defuddle.md → agent-fetch | 免费、无需 API key |
+| PDF（远程 URL 或本地文件） | 内置 PDF 提取（`extract_pdf.sh`） | 三级 fallback：marker-pdf → pdftotext → pypdf |
+| 其他所有 URL | 代理级联 `fetch.sh`：r.jina.ai → defuddle.md → agent-fetch | 免费、无需 API key、内置内容验证 |
 
 ### 前置条件
 
 - [ ] 已安装 [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
 - [ ] **curl**（macOS/Linux 自带）
-- [ ] （公众号抓取）Python 3.8+ 及 playwright
+- [ ] （可选 - 公众号抓取）Python 3.8+ 及 playwright
   ```bash
   pip install playwright beautifulsoup4 lxml
   playwright install chromium
   ```
-- [ ] （代理降级）[agent-fetch](https://github.com/teng-lin/agent-fetch) — 当在线代理都失败时的本地回退工具
+- [ ] （可选 - PDF 提取）以下任一：
+  - **marker-pdf**（最佳质量）：`pip install marker-pdf`
+  - **pdftotext**（速度快）：`brew install poppler`
+  - **pypdf**（兜底）：`pip install pypdf`
+- [ ] （可选 - 代理降级）[agent-fetch](https://github.com/teng-lin/agent-fetch)
   ```bash
   npx agent-fetch --help  # 无需预装，npx 自动下载
   ```
-- [ ] （飞书抓取）环境变量 `FEISHU_APP_ID` 和 `FEISHU_APP_SECRET`
+- [ ] （可选 - 飞书抓取）环境变量 `FEISHU_APP_ID` 和 `FEISHU_APP_SECRET`
   ```bash
   echo $FEISHU_APP_ID  # 验证已配置
   ```
@@ -149,6 +159,8 @@ ls ~/.claude/skills/markdown-proxy/SKILL.md
 - "读一下这篇公众号：https://mp.weixin.qq.com/s/abc123"
 - "把这个飞书文档转成 Markdown：https://xxx.feishu.cn/docx/xxxxxxxx"
 - "读一下这个飞书知识库页面：https://xxx.feishu.cn/wiki/xxxxxxxx"
+- "提取这个 PDF：https://example.com/paper.pdf"
+- "转换本地 PDF：/path/to/document.pdf"
 
 ### 代理优先级
 
@@ -170,10 +182,11 @@ ls ~/.claude/skills/markdown-proxy/SKILL.md
 ### 常见问题
 
 | 问题 | 解决方法 |
-|------|---------.|
+|------|----------|
 | 公众号抓取失败 | 运行 `playwright install chromium` 安装浏览器 |
 | 飞书文档返回权限错误 | 检查 `FEISHU_APP_ID` 和 `FEISHU_APP_SECRET` 环境变量，确认应用有文档读取权限 |
 | 飞书知识库页面抓取失败 | 确认应用有 `wiki:wiki:readonly` 权限 |
+| PDF 提取失败 | 安装任一工具：`pip install marker-pdf`、`brew install poppler`、`pip install pypdf` |
 | r.jina.ai 返回空内容 | 自动降级到 defuddle.md（无需手动操作） |
 | 所有代理都失败 | URL 可能有严格认证限制，尝试 `npx agent-fetch` |
 
